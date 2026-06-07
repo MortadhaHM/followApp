@@ -48,7 +48,8 @@ app = FastAPI(
 # Allow all origins during local development (frontend on any localhost port)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    # Production: only allow the deployed Vercel frontend
+    allow_origins=["https://follow-app-rho.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
