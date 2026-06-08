@@ -588,12 +588,41 @@ button { font-family: inherit; }
   padding: 12px 16px;
   border-radius: 10px;
   border: 1.5px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
   font-size: 15px;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.35s;
+  color: var(--text);
+  background-color: var(--surface);
+  /* Force browser to use our colors, not system dark-mode colors */
+  color-scheme: light;
+  -webkit-text-fill-color: unset;
+}
+
+/* Light theme colors */
+[data-theme="light"] .input,
+[data-theme="light"] .select {
+  background-color: #FFFFFF !important;
+  color: #1A1A2E !important;
+  -webkit-text-fill-color: #1A1A2E !important;
+  caret-color: #1A1A2E !important;
+}
+[data-theme="light"] .select option {
+  background-color: #FFFFFF !important;
+  color: #1A1A2E !important;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] .input,
+[data-theme="dark"] .select {
+  background-color: #252525 !important;
+  color: #F5F1E6 !important;
+  -webkit-text-fill-color: #F5F1E6 !important;
+  caret-color: #F5F1E6 !important;
+}
+[data-theme="dark"] .select option {
+  background-color: #252525 !important;
+  color: #F5F1E6 !important;
 }
 
 .input::placeholder { color: var(--text-muted); opacity: 0.7; }

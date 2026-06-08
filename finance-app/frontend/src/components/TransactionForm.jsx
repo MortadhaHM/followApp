@@ -1,12 +1,13 @@
 /**
  * TransactionForm.jsx
  * Form to create a new income/expense transaction.
- * Features: icon-prefixed inputs, gradient submit button, success toast.
+ * Features: clean inline-styled inputs, gradient submit button, success toast.
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchCategories } from "../api/categories.js";
 import { createTransaction } from "../api/transactions.js";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 function todayISO() {
   const d = new Date();
@@ -118,6 +119,42 @@ function Toast({ message, onDone }) {
 
 /* ── Main component ─────────────────────────────────── */
 export default function TransactionForm({ onCreated }) {
+  const { theme } = useTheme();
+
+  const textColor = theme === "dark" ? "#F5F1E6" : "#1A1A2E";
+  const bgColor   = theme === "dark" ? "#252525"  : "#FFFFFF";
+
+  // Direct inline style object — sets every relevant text property explicitly
+  const inputStyle = {
+    color:               textColor,
+    background:          bgColor,
+    backgroundColor:     bgColor,
+    WebkitTextFillColor: textColor,
+    caretColor:          textColor,
+    opacity:             1,
+  };
+
+  // Nuclear option: directly set DOM styles on every form input/select
+  // This bypasses ALL CSS cascade, specificity, and browser color-scheme issues
+  useEffect(() => {
+    const applyStyles = () => {
+      const elements = document.querySelectorAll(
+        "#transaction-form input, #transaction-form select"
+      );
+      elements.forEach((el) => {
+        el.style.setProperty("color", textColor, "important");
+        el.style.setProperty("background-color", bgColor, "important");
+        el.style.setProperty("background", bgColor, "important");
+        el.style.setProperty("-webkit-text-fill-color", textColor, "important");
+        el.style.setProperty("caret-color", textColor, "important");
+        el.style.setProperty("opacity", "1", "important");
+      });
+    };
+    applyStyles();
+    // Re-apply after a short delay (for browser autofill timing)
+    const t = setTimeout(applyStyles, 100);
+    return () => clearTimeout(t);
+  }, [theme, textColor, bgColor]);
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState("");
   const [categoryOrSource, setCategoryOrSource] = useState("");
@@ -144,8 +181,23 @@ export default function TransactionForm({ onCreated }) {
     let cancelled = false;
     setLoadingCategories(true);
     fetchCategories()
-      .then((data) => { if (!cancelled) setCategories(data); })
-      .catch((e) => { if (!cancelled) setError(e.message || "Failed to load categories"); })
+      .then((data) => {
+        if (!cancelled) {
+          setCategories({
+            income_sources: data?.income_sources?.length ? data.income_sources : ["Salary", "Freelance", "Investments", "Gifts", "Other"],
+            expense_categories: data?.expense_categories?.length ? data.expense_categories : ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
+          });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setCategories({
+            income_sources: ["Salary", "Freelance", "Investments", "Gifts", "Other"],
+            expense_categories: ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
+          });
+          console.warn("Could not load categories from backend, using fallbacks:", e.message);
+        }
+      })
       .finally(() => { if (!cancelled) setLoadingCategories(false); });
     return () => { cancelled = true; };
   }, []);
@@ -250,59 +302,88 @@ export default function TransactionForm({ onCreated }) {
             </div>
           </div>
 
-          {/* Amount / Category / Date row */}
-          <div className="form__grid">
+          {/* Amount / Category row */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 0 }}>
             <div className="form__field">
-              <label className="label" htmlFor="amount">Amount</label>
-              <div className="input-wrapper">
-                <span className="input-icon"><DollarIcon /></span>
-                <input
-                  id="amount"
-                  className="input input--with-icon"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                />
-              </div>
+              <label style={{ fontSize: 13, fontWeight: 600, color: theme === 'dark' ? '#9A9A9A' : '#6B7A99', letterSpacing: '0.3px', display: 'block', marginBottom: 8 }} htmlFor="amount">Amount</label>
+              <input
+                id="amount"
+                type="text"
+                inputMode="decimal"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  height: 52,
+                  padding: '0 16px',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  fontFamily: 'Inter, sans-serif',
+                  color: theme === 'dark' ? '#F5F1E6' : '#1A1A2E',
+                  backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+                  border: `1.5px solid ${theme === 'dark' ? 'rgba(212,175,55,0.3)' : 'rgba(108,92,231,0.2)'}`,
+                  borderRadius: 10,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  WebkitTextFillColor: theme === 'dark' ? '#F5F1E6' : '#1A1A2E',
+                  caretColor: theme === 'dark' ? '#F5F1E6' : '#1A1A2E',
+                  colorScheme: 'light',
+                }}
+              />
             </div>
 
             <div className="form__field">
-              <label className="label" htmlFor="category">
+              <label style={{ fontSize: 13, fontWeight: 600, color: theme === 'dark' ? '#9A9A9A' : '#6B7A99', letterSpacing: '0.3px', display: 'block', marginBottom: 8 }} htmlFor="category">
                 {type === "income" ? "Source" : "Category"}
               </label>
-              <div className="input-wrapper">
-                <span className="input-icon"><CategoryIcon /></span>
-                <select
-                  id="category"
-                  className="select input--with-icon"
-                  value={categoryOrSource}
-                  onChange={(e) => setCategoryOrSource(e.target.value)}
-                  disabled={loadingCategories}
-                  required
-                >
+              <select
+                id="category"
+                value={categoryOrSource}
+                onChange={(e) => setCategoryOrSource(e.target.value)}
+                disabled={loadingCategories}
+                required
+                style={{
+                  width: '100%',
+                  height: 52,
+                  padding: '0 12px',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  fontFamily: 'Inter, sans-serif',
+                  color: theme === 'dark' ? '#F5F1E6' : '#1A1A2E',
+                  backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+                  border: `1.5px solid ${theme === 'dark' ? 'rgba(212,175,55,0.3)' : 'rgba(108,92,231,0.2)'}`,
+                  borderRadius: 10,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  cursor: 'pointer',
+                  appearance: 'auto',
+                  WebkitTextFillColor: theme === 'dark' ? '#F5F1E6' : '#1A1A2E',
+                  colorScheme: 'light',
+                }}
+              >
                   {loadingCategories && <option value="">Loading…</option>}
                   {options.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
-                </select>
-              </div>
+              </select>
             </div>
+          </div>
 
-            <div className="form__field">
-              <label className="label" htmlFor="date">Date</label>
-              <div className="input-wrapper">
-                <span className="input-icon"><CalendarIcon /></span>
-                <input
-                  id="date"
-                  className="input input--with-icon"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </div>
+          {/* Date row — full width */}
+          <div className="form__field">
+            <label className="label" htmlFor="date">Date</label>
+            <div className="input-wrapper">
+              <span className="input-icon"><CalendarIcon /></span>
+              <input
+                id="date"
+                className="input input--with-icon"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
             </div>
           </div>
 
@@ -319,6 +400,7 @@ export default function TransactionForm({ onCreated }) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g., weekly groceries"
+                style={inputStyle}
               />
             </div>
           </div>
@@ -336,6 +418,7 @@ export default function TransactionForm({ onCreated }) {
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="e.g., food, weekly"
+                style={inputStyle}
               />
             </div>
           </div>
