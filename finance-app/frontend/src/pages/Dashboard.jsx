@@ -1,6 +1,6 @@
 /**
  * Dashboard.jsx
- * Protected main screen: shows Navbar, TransactionForm, and TransactionList.
+ * Protected main screen: sticky Navbar, two-column layout (form left, list right).
  */
 
 import { useState } from "react";
@@ -14,11 +14,19 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <main className="container">
-        <TransactionForm onCreated={() => setRefreshSignal((n) => n + 1)} />
-        <TransactionList refreshSignal={refreshSignal} />
+      <main className="container" id="main-content">
+        <div className="main-layout">
+          {/* Left: Add Transaction form */}
+          <div>
+            <TransactionForm onCreated={() => setRefreshSignal((n) => n + 1)} />
+          </div>
+
+          {/* Right: Summary + Transaction list */}
+          <div>
+            <TransactionList refreshSignal={refreshSignal} />
+          </div>
+        </div>
       </main>
     </>
   );
 }
-
