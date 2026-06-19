@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerRequest } from "../api/auth.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import ThemeToggle from "../components/ThemeToggle.jsx";
 
 /* ── Icons ─────────────────────────────────────────── */
@@ -60,6 +61,7 @@ const SparkleIcon = () => (
 
 export default function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -78,9 +80,14 @@ export default function Register() {
 
     setSubmitting(true);
     try {
-      await registerRequest(email.trim(), password);
-      setSuccess(true);
-      setTimeout(() => navigate("/login", { replace: true }), 1200);
+      const token = await registerRequest(email.trim(), password);
+      if (token) {
+        setSuccess(true);
+        // Go straight to onboarding — login handles profile check and redirecting
+        setTimeout(() => login(token), 1200);
+      } else {
+        throw new Error("No token returned from server.");
+      }
     } catch (e2) {
       setError(e2.message || "Registration failed — please try again.");
     } finally {
@@ -156,7 +163,7 @@ export default function Register() {
                 color: "var(--success)",
               }}
             >
-              Account created! Redirecting to sign in…
+              Account created! Setting up your profile...
             </div>
           ) : null}
 

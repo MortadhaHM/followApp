@@ -5,9 +5,9 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { fetchCategories } from "../api/categories.js";
 import { createTransaction } from "../api/transactions.js";
 import { useTheme } from "../context/ThemeContext.jsx";
+import { useCategories } from "../context/CategoriesContext.jsx";
 
 function todayISO() {
   const d = new Date();
@@ -162,11 +162,7 @@ export default function TransactionForm({ onCreated }) {
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
 
-  const [categories, setCategories] = useState({
-    income_sources: [],
-    expense_categories: [],
-  });
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  const { categories, loading: loadingCategories } = useCategories();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [toastMsg, setToastMsg] = useState(null);
@@ -177,30 +173,7 @@ export default function TransactionForm({ onCreated }) {
       : categories.expense_categories;
   }, [categories, type]);
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoadingCategories(true);
-    fetchCategories()
-      .then((data) => {
-        if (!cancelled) {
-          setCategories({
-            income_sources: data?.income_sources?.length ? data.income_sources : ["Salary", "Freelance", "Investments", "Gifts", "Other"],
-            expense_categories: data?.expense_categories?.length ? data.expense_categories : ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
-          });
-        }
-      })
-      .catch((e) => {
-        if (!cancelled) {
-          setCategories({
-            income_sources: ["Salary", "Freelance", "Investments", "Gifts", "Other"],
-            expense_categories: ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
-          });
-          console.warn("Could not load categories from backend, using fallbacks:", e.message);
-        }
-      })
-      .finally(() => { if (!cancelled) setLoadingCategories(false); });
-    return () => { cancelled = true; };
-  }, []);
+  // useEffect removed - categories now come from CategoriesContext
 
   useEffect(() => {
     if (!categoryOrSource && options.length > 0) {
