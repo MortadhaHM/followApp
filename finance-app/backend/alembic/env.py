@@ -11,8 +11,9 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import settings
 from app.database import Base
 
-# Import models so Alembic sees users and transactions tables
+# Import models so Alembic sees users, transactions, and user_profile tables
 import app.models  # noqa: F401
+import app.models.profile  # noqa: F401
 
 config = context.config
 

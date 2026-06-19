@@ -1,6 +1,7 @@
 /**
  * categories.js
- * Fetches static income sources and expense categories for dropdowns.
+ * Fetches personalized income sources and expense categories from user profile.
+ * Falls back to defaults if no profile exists.
  */
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -18,15 +19,16 @@ export async function fetchCategories() {
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to load categories (${res.status})`);
+    // Fallback to defaults if categories endpoint fails
+    return {
+      income_sources: ["Salary", "Freelance", "Investments", "Gifts", "Other"],
+      expense_categories: ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
+    };
   }
 
   const data = await res.json();
-  // Expected backend shape:
-  // { income_sources: string[], expense_categories: string[] }
   return {
-    income_sources: data?.income_sources || [],
-    expense_categories: data?.expense_categories || [],
+    income_sources: data?.income_sources?.length ? data.income_sources : ["Salary", "Freelance", "Investments", "Gifts", "Other"],
+    expense_categories: data?.expense_categories?.length ? data.expense_categories : ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],
   };
 }
-

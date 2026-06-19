@@ -4,13 +4,17 @@ Wires routers, CORS, and the static categories endpoint.
 Run with: uvicorn app.main:app --reload
 """
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import auth, transactions
+from app.core.security import get_current_user
+from app.routers import auth, profile, transactions, categories
+from app.models.profile import UserProfile
+from app.database import get_db
+from sqlalchemy.orm import Session
 
-# Predefined dropdown values for the frontend — not stored in the database
-INCOME_SOURCES = [
+# Predefined static defaults (fallback when user has no profile)
+DEFAULT_INCOME_SOURCES = [
     "Gift",
     "Family Support",
     "Refund",
@@ -20,7 +24,7 @@ INCOME_SOURCES = [
     "Other",
 ]
 
-EXPENSE_CATEGORIES = [
+DEFAULT_EXPENSE_CATEGORIES = [
     "Food",
     "Coffee",
     "Groceries",
@@ -41,7 +45,7 @@ EXPENSE_CATEGORIES = [
 
 app = FastAPI(
     title="Personal Finance API",
-    description="Phase 1 backend — auth and transaction tracking",
+    description="Phase 1 backend — auth, transactions, and adaptive onboarding",
     version="1.0.0",
 )
 
@@ -61,19 +65,29 @@ app.add_middleware(
 
 # Mount route modules
 app.include_router(auth.router)
+app.include_router(profile.router)
 app.include_router(transactions.router)
+app.include_router(categories.router)
 
 
-@app.get("/categories")
-def get_categories():
+def get_categories_for_user(db: Session, current_user):
     """
-    Return static income sources and expense categories for frontend dropdowns.
-    No database table — just predefined lists.
+    Get categories for the current user.
+    If user has a profile, return personalized lists.
+    Otherwise, return default static lists.
     """
-    return {
-        "income_sources": INCOME_SOURCES,
-        "expense_categories": EXPENSE_CATEGORIES,
-}
+    # Check if user has a profile
+    profile = db.query(UserProfile).filter(UserProfile.user_id == current_user.id).first()
+    if profile:
+        return {
+            "income_sources": profile.income_sources,
+            "expense_categories": profile.categories,
+        }
+    else:
+        return {
+            "income_sources": DEFAULT_INCOME_SOURCES,
+            "expense_categories": DEFAULT_EXPENSE_CATEGORIES,
+        }
 
 
 @app.get("/")
