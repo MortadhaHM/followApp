@@ -221,7 +221,7 @@ export default function TransactionForm({ onCreated }) {
       setDate(todayISO());
 
       setToastMsg(
-        `${type === "income" ? "+" : "−"}$${numericAmount.toFixed(2)} · ${categoryOrSource}`
+        `${type === "income" ? "+" : "−"}${numericAmount.toFixed(2)} DT · ${categoryOrSource}`
       );
 
       if (typeof onCreated === "function") onCreated();

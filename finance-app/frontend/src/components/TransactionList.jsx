@@ -120,7 +120,7 @@ export default function TransactionList({ refreshSignal }) {
             </div>
             <div className="summary-card__label">Income</div>
             <div className="summary-card__value summary-card__value--income">
-              ${formatMoney(income)}
+              {formatMoney(income)} DT
             </div>
           </div>
           <div className="summary-card">
@@ -129,7 +129,7 @@ export default function TransactionList({ refreshSignal }) {
             </div>
             <div className="summary-card__label">Expenses</div>
             <div className="summary-card__value summary-card__value--expense">
-              ${formatMoney(expense)}
+              {formatMoney(expense)} DT
             </div>
           </div>
           <div className="summary-card">
@@ -141,7 +141,7 @@ export default function TransactionList({ refreshSignal }) {
               className="summary-card__value"
               style={{ color: balance >= 0 ? "var(--income-color)" : "var(--expense-color)" }}
             >
-              {balance >= 0 ? "+" : "−"}${formatMoney(Math.abs(balance))}
+              {balance >= 0 ? "+" : "−"}{formatMoney(Math.abs(balance))} DT
             </div>
           </div>
         </div>

@@ -10,8 +10,8 @@ import { deleteTransaction } from "../api/transactions.js";
 function formatAmount(type, amount) {
   const n = Number(amount);
   const sign = type === "expense" ? "−" : "+";
-  if (!Number.isFinite(n)) return `${sign}${amount}`;
-  return `${sign}$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (!Number.isFinite(n)) return `${sign}${amount} DT`;
+  return `${sign}${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DT`;
 }
 
 function formatDate(dateStr) {
