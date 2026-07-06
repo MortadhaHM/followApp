@@ -15,6 +15,8 @@ I'm an ERP/BI engineering student in Tunisia. The plan for this project has alwa
 
 It is not a tutorial project and not built on a synthetic dataset. Every transaction in it is real.
 
+**Status:** actively being built. Phases 1 and 1v2 are done and in daily use; the data warehouse (Phase 3) is next.
+
 ---
 
 ## Current Features (Phase 1 and Phase 1v2)
@@ -119,20 +121,16 @@ VITE_API_URL=http://localhost:8000
 
 ---
 
-## Notes on How This Is Built
-
-AI coding tools (Cursor, mainly) are used to speed up development, but every generated block of code is read and understood before it goes in, not copied blindly. The core data model, anything touching money calculations, and the warehouse schema design are worked out and understood personally, not delegated.
-
-Later phases (Kafka, ML, Databricks) are deliberately held off until the phases they depend on are stable. Nothing here is built out of order for the sake of looking impressive sooner.
-
----
 ## Screenshots
+
 <img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
 <img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
 <img width="1901" height="936" alt="image" src="https://github.com/user-attachments/assets/5e155b6d-4262-4609-8e84-74817fe18314" />
 <img width="1901" height="935" alt="image" src="https://github.com/user-attachments/assets/546c5f71-039e-4464-acc8-26cbc4fcc4a6" />
 <img width="1901" height="936" alt="image" src="https://github.com/user-attachments/assets/7b31e77e-5993-44a9-98ac-854fac442a11" />
 <img width="1897" height="935" alt="image" src="https://github.com/user-attachments/assets/857bf82d-7f87-4b54-ad20-be92d1e9316c" />
+
+---
 
 ## License
 
