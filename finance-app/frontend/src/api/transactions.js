@@ -4,6 +4,8 @@
  * All endpoints require a valid JWT via Authorization: Bearer <token>.
  */
 
+import { onUnauthorized } from "../context/AuthContext.jsx";
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function getToken() {
@@ -22,6 +24,11 @@ async function request(path, { method = "GET", body } = {}) {
   });
 
   if (!res.ok) {
+    // Token expired or invalid — auto-logout and redirect to /login
+    if (res.status === 401) {
+      onUnauthorized();
+      return;
+    }
     let message = `Request failed (${res.status})`;
     try {
       const data = await res.json();
@@ -56,4 +63,3 @@ export function updateTransaction(id, payload) {
 export function deleteTransaction(id) {
   return request(`/transactions/${id}`, { method: "DELETE" });
 }
-

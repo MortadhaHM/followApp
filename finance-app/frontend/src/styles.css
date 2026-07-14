@@ -724,6 +724,12 @@ button { font-family: inherit; }
   color: var(--danger);
 }
 
+.alert--warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  color: #d97706;
+}
+
 @keyframes slideInDown {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }

@@ -5,7 +5,7 @@
  */
 
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { login as loginRequest } from "../api/auth.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import ThemeToggle from "../components/ThemeToggle.jsx";
@@ -63,6 +63,8 @@ const ArrowRightIcon = () => (
 
 export default function Login() {
   const { isAuthenticated, login } = useAuth();
+  const location = useLocation();
+  const sessionExpired = new URLSearchParams(location.search).get("expired") === "1";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -139,6 +141,12 @@ export default function Login() {
             <h2 className="auth-heading">Welcome back</h2>
             <p className="auth-sub">Sign in to continue to your dashboard.</p>
           </div>
+
+          {sessionExpired ? (
+            <div className="alert alert--warning" role="alert">
+              ⏱ Your session expired. Please sign in again.
+            </div>
+          ) : null}
 
           {error ? (
             <div className="alert alert--error" role="alert">{error}</div>
