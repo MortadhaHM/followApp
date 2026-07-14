@@ -10,6 +10,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext.jsx";
+import { onUnauthorized } from "./AuthContext.jsx";
 
 const CategoriesContext = createContext(null);
 
@@ -34,7 +35,14 @@ async function fetchCategoriesFromApi(token) {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!res.ok) return DEFAULTS;
+    if (!res.ok) {
+      if (res.status === 401) {
+        // Token expired — trigger auto-logout
+        onUnauthorized();
+        return DEFAULTS;
+      }
+      return DEFAULTS;
+    }
 
     const data = await res.json();
     return {

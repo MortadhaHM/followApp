@@ -4,6 +4,8 @@
  * Falls back to defaults if no profile exists.
  */
 
+import { onUnauthorized } from "../context/AuthContext.jsx";
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function getToken() {
@@ -19,7 +21,12 @@ export async function fetchCategories() {
   });
 
   if (!res.ok) {
-    // Fallback to defaults if categories endpoint fails
+    // Token expired or invalid — auto-logout and redirect to /login
+    if (res.status === 401) {
+      onUnauthorized();
+      return { income_sources: [], expense_categories: [] };
+    }
+    // Fallback to defaults if categories endpoint fails for any other reason
     return {
       income_sources: ["Salary", "Freelance", "Investments", "Gifts", "Other"],
       expense_categories: ["Food", "Rent", "Utilities", "Entertainment", "Transportation", "Shopping", "Other"],

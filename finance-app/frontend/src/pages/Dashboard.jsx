@@ -11,11 +11,13 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import TransactionForm from "../components/TransactionForm.jsx";
 import TransactionList from "../components/TransactionList.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { handleUnauthorized } = useAuth();
   const [refreshSignal, setRefreshSignal] = useState(0);
   const [profileChecked, setProfileChecked] = useState(false);
 
@@ -29,6 +31,11 @@ export default function Dashboard() {
         const res = await fetch(`${API_URL}/profile/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (res.status === 401) {
+          // Token expired — auto-logout
+          handleUnauthorized();
+          return;
+        }
         if (res.status === 404) {
           // No profile — redirect to onboarding
           navigate("/onboarding-1", { replace: true });

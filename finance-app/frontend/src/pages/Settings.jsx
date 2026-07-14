@@ -56,7 +56,7 @@ const ALL_SITUATIONS = [
 export default function Settings() {
   const navigate = useNavigate();
   const { refreshCategories } = useCategories();
-  const { logout } = useAuth();
+  const { logout, handleUnauthorized } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
@@ -85,6 +85,10 @@ export default function Settings() {
           setSelectedSituations(data.situations || []);
           setCategories(data.categories || []);
           setIncomeSources(data.income_sources || []);
+        } else if (response.status === 401) {
+          // Token expired — auto-logout
+          handleUnauthorized();
+          return;
         } else if (response.status === 404) {
           // No profile — initialize with empty state
           setProfile(null);
@@ -185,6 +189,11 @@ export default function Settings() {
       }
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // Token expired — auto-logout
+          handleUnauthorized();
+          return;
+        }
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.detail || "Failed to save profile");
       }
