@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: public
+    database: postgres
+    schema: public
+    description: "Operational tables from the FollowApp application"
+    
+    tables:
+      - name: transactions
+        description: "Raw financial transactions recorded by users"
+        columns:
+          - name: id
+            description: "UUID primary key"
+          - name: user_id
+            description: "UUID reference to the user who created the transaction"
+          - name: type
+            description: "Transaction type — income or expense (PostgreSQL enum)"
+          - name: amount
+            description: "Transaction amount in DT"
+          - name: category_or_source
+            description: "Raw category string from the app"
+          - name: description
+            description: "Optional user description"
+          - name: tags
+            description: "Optional comma-separated tags"
+          - name: date
+            description: "Date the transaction occurred"
+          - name: created_at
+            description: "Timestamp when the record was inserted"
+
+      - name: users
+        description: "Registered users of the FollowApp application"
+        columns:
+          - name: id
+            description: "UUID primary key"
+          - name: email
+            description: "User email address"
+          - name: created_at
+            description: "Timestamp when the user registered"

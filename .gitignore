@@ -6,3 +6,15 @@
 **/.env.*
 !**/.env.example
 
+# dbt
+finance_dbt/target/
+finance_dbt/dbt_packages/
+finance_dbt/logs/
+
+# logs at root level
+logs/
+
+# misc files that don't belong in the repo
+*.html
+*.webp
+*.docx
