@@ -18,3 +18,7 @@ logs/
 *.html
 *.webp
 *.docx
+
+airflow/.env
+airflow/logs/
+airflow/dags/__pycache__/
