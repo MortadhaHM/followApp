@@ -81,7 +81,7 @@ const ScaleIcon = () => (
   </svg>
 );
 
-export default function TransactionList({ refreshSignal }) {
+export default function TransactionList({ refreshSignal, onEdit }) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -105,6 +105,7 @@ export default function TransactionList({ refreshSignal }) {
   }, [refreshSignal]);
 
   const handleDeleted = () => load();
+  const handleEdit = (tx) => typeof onEdit === "function" && onEdit(tx);
 
   const { income, expense, balance } = computeSummary(transactions);
   const showSummary = !loading && !error && transactions.length > 0;
@@ -194,7 +195,7 @@ export default function TransactionList({ refreshSignal }) {
         {!loading && !error && transactions.length > 0 && (
           <ul className="tx-list" aria-label="Transaction list">
             {transactions.map((tx) => (
-              <TransactionItem key={tx.id} transaction={tx} onDeleted={handleDeleted} />
+              <TransactionItem key={tx.id} transaction={tx} onDeleted={handleDeleted} onEdit={handleEdit} />
             ))}
           </ul>
         )}

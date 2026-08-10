@@ -22,3 +22,9 @@ logs/
 airflow/.env
 airflow/logs/
 airflow/dags/__pycache__/
+gitignore/
+power bi themes/
+
+
+
+dashboards/

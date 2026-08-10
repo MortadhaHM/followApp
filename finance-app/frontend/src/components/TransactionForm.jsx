@@ -1,11 +1,13 @@
 /**
  * TransactionForm.jsx
- * Form to create a new income/expense transaction.
+ * Form to create OR edit an income/expense transaction.
  * Features: clean inline-styled inputs, gradient submit button, success toast.
+ * Pass `editingTransaction` prop to enter edit mode (pre-fills all fields).
+ * Pass `onCancelEdit` to allow dismissing edit mode.
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createTransaction } from "../api/transactions.js";
+import { createTransaction, updateTransaction } from "../api/transactions.js";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCategories } from "../context/CategoriesContext.jsx";
 
@@ -69,6 +71,23 @@ const PlusIcon = () => (
   </svg>
 );
 
+const SaveIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+    <polyline points="17 21 17 13 7 13 7 21"/>
+    <polyline points="7 3 7 8 15 8"/>
+  </svg>
+);
+
+const XIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6"  y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
 const CheckIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
        strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -93,7 +112,7 @@ const TrendDownSmall = () => (
 );
 
 /* ── Toast ─────────────────────────────────────────── */
-function Toast({ message, onDone }) {
+function Toast({ message, variant = "success", onDone }) {
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
@@ -104,12 +123,14 @@ function Toast({ message, onDone }) {
 
   return (
     <div className="toast-container" aria-live="polite">
-      <div className={`toast toast--success${exiting ? " toast--exiting" : ""}`} role="status">
+      <div className={`toast toast--${variant}${exiting ? " toast--exiting" : ""}`} role="status">
         <div className="toast__icon">
           <CheckIcon />
         </div>
         <div className="toast__body">
-          <div className="toast__title">Transaction added!</div>
+          <div className="toast__title">
+            {variant === "edit" ? "Transaction updated!" : "Transaction added!"}
+          </div>
           <div className="toast__msg">{message}</div>
         </div>
       </div>
@@ -118,7 +139,8 @@ function Toast({ message, onDone }) {
 }
 
 /* ── Main component ─────────────────────────────────── */
-export default function TransactionForm({ onCreated }) {
+export default function TransactionForm({ onCreated, editingTransaction, onCancelEdit }) {
+  const isEditing = Boolean(editingTransaction);
   const { theme } = useTheme();
 
   const textColor = theme === "dark" ? "#F5F1E6" : "#1A1A2E";
@@ -162,10 +184,33 @@ export default function TransactionForm({ onCreated }) {
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
 
+  // When editing mode changes (user clicks edit on a transaction), populate fields
+  useEffect(() => {
+    if (editingTransaction) {
+      setType(editingTransaction.type || "expense");
+      setAmount(String(editingTransaction.amount || ""));
+      setCategoryOrSource(editingTransaction.category_or_source || "");
+      setDate(editingTransaction.date || todayISO());
+      setDescription(editingTransaction.description || "");
+      setTags(editingTransaction.tags || "");
+      setError("");
+    } else {
+      // Reset to blank when cancel / after create
+      setType("expense");
+      setAmount("");
+      setCategoryOrSource("");
+      setDate(todayISO());
+      setDescription("");
+      setTags("");
+      setError("");
+    }
+  }, [editingTransaction]);
+
   const { categories, loading: loadingCategories } = useCategories();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [toastMsg, setToastMsg] = useState(null);
+  const [toastVariant, setToastVariant] = useState("success");
 
   const options = useMemo(() => {
     return type === "income"
@@ -173,18 +218,16 @@ export default function TransactionForm({ onCreated }) {
       : categories.expense_categories;
   }, [categories, type]);
 
-  // useEffect removed - categories now come from CategoriesContext
-
   useEffect(() => {
     if (!categoryOrSource && options.length > 0) {
       setCategoryOrSource(options[0]);
     }
   }, [options, categoryOrSource]);
 
-  // Reset category when type changes
+  // Reset category when type changes — but only in create mode
   useEffect(() => {
-    setCategoryOrSource("");
-  }, [type]);
+    if (!isEditing) setCategoryOrSource("");
+  }, [type, isEditing]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -206,27 +249,37 @@ export default function TransactionForm({ onCreated }) {
 
     setSubmitting(true);
     try {
-      await createTransaction({
+      const payload = {
         type,
         amount: numericAmount,
         category_or_source: categoryOrSource,
         date,
         description: description.trim() ? description.trim() : null,
         tags: tags.trim() ? tags.trim() : null,
-      });
+      };
 
-      setAmount("");
-      setDescription("");
-      setTags("");
-      setDate(todayISO());
-
-      setToastMsg(
-        `${type === "income" ? "+" : "−"}${numericAmount.toFixed(2)} DT · ${categoryOrSource}`
-      );
-
-      if (typeof onCreated === "function") onCreated();
+      if (isEditing) {
+        await updateTransaction(editingTransaction.id, payload);
+        setToastVariant("edit");
+        setToastMsg(
+          `${type === "income" ? "+" : "−"}${numericAmount.toFixed(2)} DT · ${categoryOrSource}`
+        );
+        if (typeof onCancelEdit === "function") onCancelEdit(); // exit edit mode
+        if (typeof onCreated === "function") onCreated();       // refresh list
+      } else {
+        await createTransaction(payload);
+        setAmount("");
+        setDescription("");
+        setTags("");
+        setDate(todayISO());
+        setToastVariant("success");
+        setToastMsg(
+          `${type === "income" ? "+" : "−"}${numericAmount.toFixed(2)} DT · ${categoryOrSource}`
+        );
+        if (typeof onCreated === "function") onCreated();
+      }
     } catch (e2) {
-      setError(e2.message || "Failed to create transaction");
+      setError(e2.message || (isEditing ? "Failed to update transaction" : "Failed to create transaction"));
     } finally {
       setSubmitting(false);
     }
@@ -236,10 +289,24 @@ export default function TransactionForm({ onCreated }) {
 
   return (
     <>
-      {toastMsg && <Toast message={toastMsg} onDone={clearToast} />}
+      {toastMsg && <Toast message={toastMsg} variant={toastVariant} onDone={clearToast} />}
 
-      <section className="card">
-        <h2 className="card__title">Add Transaction</h2>
+      <section className={`card${isEditing ? " card--editing" : ""}`}>
+        <div className="card__header" style={{ marginBottom: 16 }}>
+          <h2 className="card__title">{isEditing ? "Edit Transaction" : "Add Transaction"}</h2>
+          {isEditing && (
+            <button
+              type="button"
+              className="btn btn--secondary btn--icon"
+              onClick={onCancelEdit}
+              aria-label="Cancel edit"
+              title="Cancel"
+            >
+              <XIcon />
+              Cancel
+            </button>
+          )}
+        </div>
 
         {error ? (
           <div className="alert alert--error" role="alert" style={{ marginBottom: 12 }}>
@@ -406,6 +473,11 @@ export default function TransactionForm({ onCreated }) {
               <>
                 <span className="spinner" />
                 Saving…
+              </>
+            ) : isEditing ? (
+              <>
+                <SaveIcon />
+                Save Changes
               </>
             ) : (
               <>

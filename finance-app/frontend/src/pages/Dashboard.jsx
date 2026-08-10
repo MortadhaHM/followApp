@@ -20,6 +20,7 @@ export default function Dashboard() {
   const { handleUnauthorized } = useAuth();
   const [refreshSignal, setRefreshSignal] = useState(0);
   const [profileChecked, setProfileChecked] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
 
   useEffect(() => {
     // Check if user has a profile — redirect to onboarding if not
@@ -58,14 +59,25 @@ export default function Dashboard() {
       <Navbar />
       <main className="container" id="main-content">
         <div className="main-layout">
-          {/* Left: Add Transaction form */}
+          {/* Left: Add / Edit Transaction form */}
           <div>
-            <TransactionForm onCreated={() => setRefreshSignal((n) => n + 1)} />
+            <TransactionForm
+              onCreated={() => setRefreshSignal((n) => n + 1)}
+              editingTransaction={editingTransaction}
+              onCancelEdit={() => setEditingTransaction(null)}
+            />
           </div>
 
           {/* Right: Summary + Transaction list */}
           <div>
-            <TransactionList refreshSignal={refreshSignal} />
+            <TransactionList
+              refreshSignal={refreshSignal}
+              onEdit={(tx) => {
+                setEditingTransaction(tx);
+                // Scroll the form into view on mobile
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
           </div>
         </div>
       </main>
