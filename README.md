@@ -15,7 +15,7 @@ I'm an ERP/BI engineering student in Tunisia. The plan for this project has alwa
 
 It is not a tutorial project and not built on a synthetic dataset. Every transaction in it is real.
 
-**Status:** actively being built. Phases 1 and 1v2 are done and in daily use; the data warehouse (Phase 3) is next.
+**Status:** actively being built. Phases 1, 1v2, and the data warehouse with orchestration (Phase 3) are complete. Phase 4 is underway — Power BI is connected to the warehouse and dashboard building has started.
 
 ---
 
@@ -33,16 +33,25 @@ It is not a tutorial project and not built on a synthetic dataset. Every transac
 ## Architecture
 
 ```
-React (Vite)  --->  FastAPI  --->  PostgreSQL (Supabase)
-  [Vercel]           [Render]
+React (Vite)  --->  FastAPI  --->  PostgreSQL / public schema (Supabase)
+  [Vercel]           [Render]                |
+                                              |
+                                     dbt (finance_dbt/)
+                                     orchestrated nightly by
+                                     Apache Airflow (Docker Compose)
+                                              |
+                                              v
+                               PostgreSQL / analytics schema (Supabase)
+                               constellation schema — fact_transactions,
+                               fact_daily_balance, dim_date, dim_category
+                                              |
+                               Power BI Desktop  (dashboard build in progress)
+                               Recharts in-app   (Phase 4 — real users)
 
 Planned next:
-  -> dbt + Airbyte              (transform raw transactions into a warehouse)
-  -> Constellation schema       (multiple fact tables, different grains)
-  -> Apache Airflow             (orchestration)
-  -> Power BI                   (dashboards)
-  -> Apache Kafka               (real-time updates)
-  -> scikit-learn + MLflow      (forecasting, anomaly detection)
+  -> Finish Power BI dashboard build (Categories, Time Patterns, Income, Overview)
+  -> Apache Kafka               (real-time updates, Phase 5)
+  -> scikit-learn + MLflow      (forecasting, anomaly detection, Phase 6)
   -> Databricks (optional)      (enterprise-scale platform)
 ```
 
@@ -58,14 +67,16 @@ Planned next:
 | Frontend hosting | Vercel | In use |
 | Backend hosting | Render | In use |
 | DB client | DBeaver | In use |
-| ETL | dbt, Airbyte | Planned, Phase 3 |
-| Orchestration | Apache Airflow | Planned, Phase 3 |
-| BI | Power BI | Planned, Phase 4 |
-| Streaming | Apache Kafka | Planned, Phase 5 |
-| ML | scikit-learn, MLflow | Planned, Phase 6 |
+| ETL transformations | dbt | Phase 3 complete |
+| Data integration | Airbyte | Pending — enters when external sources are added |
+| Orchestration | Apache Airflow (Docker Compose) | Phase 3 complete — nightly DAG running |
+| BI (portfolio) | Power BI Desktop | Phase 4 — connected, dashboard build started |
+| BI (in-app) | Recharts | Phase 4 |
+| Streaming | Apache Kafka | Phase 5 |
+| ML | scikit-learn, MLflow | Phase 6 |
 | Large-scale platform (optional) | Databricks, Delta Lake, Spark | Under consideration |
 
-The database was originally on Render's free managed PostgreSQL, which expires after 90 days. It has since been migrated to Supabase for permanent free hosting, noted here because it's a real lesson, not a hypothetical one.
+The database was originally on Render's free managed PostgreSQL, which expires after 90 days. It has since been migrated to Supabase for permanent free hosting — noted here because it's a real lesson, not a hypothetical one.
 
 ---
 
@@ -73,36 +84,60 @@ The database was originally on Render's free managed PostgreSQL, which expires a
 
 ```
 followApp/
-└── finance-app/        # main application code (frontend + backend)
+├── finance-app/        # application code (React frontend + FastAPI backend)
+├── finance_dbt/        # dbt project — data warehouse transformations
+│   ├── seeds/
+│   │   └── dim_date.csv              # pre-seeded date dimension 2026–2030
+│   ├── models/
+│   │   ├── staging/
+│   │   │   ├── sources.yml           # registers operational source tables
+│   │   │   ├── stg_transactions.sql  # staging view — raw transactions
+│   │   │   └── stg_users.sql         # staging view — registered users
+│   │   ├── dimensions/
+│   │   │   └── dim_category.sql      # category dimension with normalization
+│   │   └── facts/
+│   │       ├── fact_transactions.sql  # atomic grain — one row per transaction
+│   │       └── fact_daily_balance.sql # daily grain — aggregated per user per day
+│   └── dbt_project.yml
+└── airflow/             # orchestration — Docker Compose
+    ├── dags/
+    │   └── dbt_run.py   # dbt_nightly_run DAG — dbt run -> dbt test, midnight daily
+    └── docker-compose.yaml
 ```
-
-If you're browsing the repo: application code lives inside `finance-app/`. Update this section with the actual internal layout (for example separate `client/` and `server/` folders) once it's finalized, so anyone cloning the repo doesn't have to guess.
 
 ---
 
-## Getting Started
+## Data Warehouse — Constellation Schema (Phase 3, complete)
 
-### Prerequisites
-- Node.js 18 or later
-- Python 3.11 or later
-- A PostgreSQL database (Supabase's free tier works well)
+The warehouse lives in the `analytics` schema of the same Supabase PostgreSQL instance, separate from the operational `public` schema. dbt reads from `public`, transforms, and writes to `analytics`.
 
-### Setup
+**Two fact tables at different grains:**
 
-```bash
-git clone https://github.com/MortadhaHM/followApp.git
-cd followApp/finance-app
-```
+- `fact_transactions` — atomic grain, one row per transaction, foreign keys to `dim_date` and `dim_category`, `user_id` kept as a plain filter column. Answers category-level questions: what did I spend most on, which income source contributed most, how does this month compare to last.
+- `fact_daily_balance` — daily grain, one row per active day per user, pre-aggregated by dbt. Includes `running_balance` (a window function) and `had_any_spending` (boolean). Answers summary questions: how much did I save this month, how many days did I spend nothing, what is my running balance.
 
-From here, set up the backend and frontend according to their respective folders. A `.env.example` is included in the repo, copy it to `.env` and fill in your own values (database connection string, JWT secret, API URL). Never commit the real `.env` file.
+**Two dimension tables:**
 
-Typical variables needed:
+- `dim_date` — pre-seeded with every date from May 15 2026 to December 31 2030 (1,692 rows). Includes `day_name`, `week_of_month`, `month_name`, `semester`, `trimester`, `is_weekend`. Pre-seeding is required, since deriving from transactions would make zero-activity days invisible.
+- `dim_category` — flat dimension built from raw transaction category strings, normalized by dbt, with a `category_type` column (income or expense).
 
-```
-DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<db>?pgbouncer=true
-JWT_SECRET=your-secret-key
-VITE_API_URL=http://localhost:8000
-```
+**dbt project (`finance_dbt/`):** staging → dimensions → facts layering. Staging models are views (always fresh, no rebuild needed), dimensions and facts are tables. Connected to Supabase via the session pooler, writing to the `analytics` schema.
+
+**Orchestration:** Apache Airflow runs via Docker Compose (six containers — webserver, scheduler, worker, triggerer, postgres, redis) using CeleryExecutor. The `dbt_nightly_run` DAG runs `dbt run` followed by `dbt test` automatically every night at midnight.
+
+A few Windows-specific issues came up and got resolved along the way: PowerShell's `echo` saves `.env` as UTF-16, which Docker can't read, so files are written with explicit UTF-8 encoding instead; paths containing spaces are defined as environment variables rather than hardcoded in `docker-compose.yaml`; and the direct Supabase connection failed DNS resolution on Windows 11, so the session pooler is used instead.
+
+**Per-user data isolation:** `user_id` is carried as a plain filter column in both fact tables. The warehouse holds all users' data; each user's dashboard filters to their own `user_id`. Per-user Row Level Security via Power BI RLS is the production path, implementable when Power BI Premium is available.
+
+---
+
+## Business Intelligence — Phase 4 (started)
+
+Power BI Desktop is connected directly to the `analytics` schema on Supabase via the PostgreSQL connector, and dashboard building is underway.
+
+Refresh workflow: run `dbt run` to update the warehouse, then Home → Refresh in Power BI Desktop to pull the latest data. Power BI does not live-connect to dbt changes, so this refresh step is manual after every dbt run.
+
+Working rule for the build: every numeric value in every visual comes from an explicit DAX measure in a dedicated `_Measures` table, never a raw column dragged directly into a visual, to avoid silent aggregation errors across unrelated tables.
 
 ---
 
@@ -110,14 +145,14 @@ VITE_API_URL=http://localhost:8000
 
 | Phase | Status | Description |
 |---|---|---|
-| 1 - Core application | Done | Auth, transactions, deployed |
-| 1v2 - Adaptive onboarding | Done | Life-situation-based categories, settings page |
-| 2 - Cross-platform sync | Done | Achieved through shared cloud deployment, no extra work needed |
-| 3 - Data warehouse | Next | Constellation schema, dbt, Airbyte, Airflow |
-| 4 - BI dashboards | Planned | Power BI connected to the warehouse |
-| 5 - Real-time pipeline | Planned | Kafka streaming into the dashboards |
-| 6 - Machine learning | Planned | Forecasting, anomaly detection, spending clusters |
-| Optional - Databricks | Planned | Enterprise-scale data lake and processing |
+| 1 — Core application | Done | Auth, transactions, deployed |
+| 1v2 — Adaptive onboarding | Done | Life-situation-based categories, settings page |
+| 2 — Cross-platform sync | Done | Achieved through shared cloud deployment |
+| 3 — Data warehouse | Done | Constellation schema, dbt pipeline, and nightly Airflow orchestration |
+| 4 — BI dashboards | In progress | Power BI connected to the warehouse, dashboard build underway |
+| 5 — Real-time pipeline | Planned | Kafka streaming into the warehouse |
+| 6 — Machine learning | Planned | Forecasting, anomaly detection, spending clusters |
+| Optional — Databricks | Planned | Enterprise-scale data lake and processing |
 
 ---
 
