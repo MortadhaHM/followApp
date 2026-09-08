@@ -30,11 +30,13 @@ export default function Navbar() {
   return (
     <header className="navbar" role="banner">
       <div className="navbar__inner">
-        <Link to="/" className="navbar__brand" aria-label="FinanceFlow home">
-          <span className="navbar__brand-icon" aria-hidden="true">
-            <WalletIcon />
-          </span>
-          <span>FinanceFlow</span>
+        <Link to="/" className="navbar__brand" aria-label="MorTrack home">
+          <img
+            src="/logo_transparent.png"
+            alt="MorTrack Logo"
+            className="navbar__brand-img"
+          />
+          <span>MorTrack</span>
         </Link>
 
         <div className="navbar__actions">

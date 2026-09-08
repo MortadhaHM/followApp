@@ -228,11 +228,13 @@ export default function Settings() {
     <div className="settings-page">
       <header className="navbar" role="banner">
         <div className="navbar__inner">
-          <a href="/" className="navbar__brand" aria-label="FinanceFlow home">
-            <span className="navbar__brand-icon" aria-hidden="true">
-              <WalletIcon />
-            </span>
-            <span>FinanceFlow</span>
+          <a href="/" className="navbar__brand" aria-label="MorTrack home">
+            <img
+              src="/logo_transparent.png"
+              alt="MorTrack Logo"
+              className="navbar__brand-img"
+            />
+            <span>MorTrack</span>
           </a>
 
           <div className="navbar__actions">

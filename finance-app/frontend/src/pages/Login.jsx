@@ -93,10 +93,12 @@ export default function Login() {
       {/* ── Left illustration panel ── */}
       <aside className="auth-panel" aria-hidden="true">
         <div className="auth-panel__logo">
-          <div className="auth-panel__logo-icon">
-            <WalletIcon />
-          </div>
-          <span className="auth-panel__logo-text">FinanceFlow</span>
+          <img
+            src="/logo_transparent.png"
+            alt="MorTrack Logo"
+            className="auth-panel__logo-img"
+          />
+          <span className="auth-panel__logo-text">MorTrack</span>
         </div>
 
         <h1 className="auth-panel__heading">
@@ -126,10 +128,12 @@ export default function Login() {
         <div className="auth-form-wrap">
           {/* Mobile logo (hidden on desktop) */}
           <div className="auth-mobile-logo">
-            <div className="auth-mobile-logo__icon">
-              <WalletIcon />
-            </div>
-            FinanceFlow
+            <img
+              src="/logo_transparent.png"
+              alt="MorTrack Logo"
+              className="auth-mobile-logo__img"
+            />
+            MorTrack
           </div>
 
           {/* Theme toggle - top right on mobile */}
