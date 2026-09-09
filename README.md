@@ -15,7 +15,7 @@ I'm an ERP/BI engineering student in Tunisia. The plan for this project has alwa
 
 It is not a tutorial project and not built on a synthetic dataset. Every transaction in it is real.
 
-**Status:** actively being built. Phases 1, 1v2, and the data warehouse with orchestration (Phase 3) are complete. Phase 4 is underway — Power BI is connected to the warehouse and dashboard building has started.
+**Status:** actively being built. Phases 1, 1v2, 2, 3 (data warehouse with orchestration), and 4 (Power BI dashboards) are complete. Phase 5 (real-time pipeline) is next.
 
 ---
 
@@ -45,11 +45,10 @@ React (Vite)  --->  FastAPI  --->  PostgreSQL / public schema (Supabase)
                                constellation schema — fact_transactions,
                                fact_daily_balance, dim_date, dim_category
                                               |
-                               Power BI Desktop  (dashboard build in progress)
+                               Power BI Desktop  (4-page dashboard, complete)
                                Recharts in-app   (Phase 4 — real users)
 
 Planned next:
-  -> Finish Power BI dashboard build (Categories, Time Patterns, Income, Overview)
   -> Apache Kafka               (real-time updates, Phase 5)
   -> scikit-learn + MLflow      (forecasting, anomaly detection, Phase 6)
   -> Databricks (optional)      (enterprise-scale platform)
@@ -70,7 +69,7 @@ Planned next:
 | ETL transformations | dbt | Phase 3 complete |
 | Data integration | Airbyte | Pending — enters when external sources are added |
 | Orchestration | Apache Airflow (Docker Compose) | Phase 3 complete — nightly DAG running |
-| BI (portfolio) | Power BI Desktop | Phase 4 — connected, dashboard build started |
+| BI (portfolio) | Power BI Desktop | Phase 4 complete — 4-page dashboard |
 | BI (in-app) | Recharts | Phase 4 |
 | Streaming | Apache Kafka | Phase 5 |
 | ML | scikit-learn, MLflow | Phase 6 |
@@ -99,10 +98,11 @@ followApp/
 │   │       ├── fact_transactions.sql  # atomic grain — one row per transaction
 │   │       └── fact_daily_balance.sql # daily grain — aggregated per user per day
 │   └── dbt_project.yml
-└── airflow/             # orchestration — Docker Compose
-    ├── dags/
-    │   └── dbt_run.py   # dbt_nightly_run DAG — dbt run -> dbt test, midnight daily
-    └── docker-compose.yaml
+├── airflow/             # orchestration — Docker Compose
+│   ├── dags/
+│   │   └── dbt_run.py   # dbt_nightly_run DAG — dbt run -> dbt test, midnight daily
+│   └── docker-compose.yaml
+└── powerbi/             # Power BI dashboard (.pbix) and exported assets
 ```
 
 ---
@@ -131,13 +131,42 @@ A few Windows-specific issues came up and got resolved along the way: PowerShell
 
 ---
 
-## Business Intelligence — Phase 4 (started)
+## Business Intelligence — Phase 4 (complete)
 
-Power BI Desktop is connected directly to the `analytics` schema on Supabase via the PostgreSQL connector, and dashboard building is underway.
-
-Refresh workflow: run `dbt run` to update the warehouse, then Home → Refresh in Power BI Desktop to pull the latest data. Power BI does not live-connect to dbt changes, so this refresh step is manual after every dbt run.
+Power BI Desktop is connected directly to the `analytics` schema on Supabase via the PostgreSQL connector. Refresh workflow: run `dbt run` to update the warehouse, then Home → Refresh in Power BI Desktop to pull the latest data. Power BI does not live-connect to dbt changes, so this refresh step is manual after every dbt run.
 
 Working rule for the build: every numeric value in every visual comes from an explicit DAX measure in a dedicated `_Measures` table, never a raw column dragged directly into a visual, to avoid silent aggregation errors across unrelated tables.
+
+The dashboard is a 4-page financial story, each page answering one question, with a fixed Batman-themed black-and-gold design (dark backgrounds, gold/yellow accents, clickable logo as a Home button, Next/Previous navigation between pages).
+
+### Overview — "How Am I Doing?"
+
+Overall financial health at a glance: Avg Daily Spending, Total Expenses, Savings, Total Income, % Income Spent, an Income vs Expenses chart by month, and a Balance Over Time trend.
+
+<img width="1432" height="806" alt="image" src="https://github.com/user-attachments/assets/cc3aa2da-5242-4a01-915c-b09ab2599c31" />
+
+
+### Categories — "Where Your Money Goes"
+
+Breaks down spending by category: Top Category, Top Category Share, Top Category Amount, a Top Spending Categories chart, a Most Frequent Purchases chart (by transaction count, not amount), and a This Month vs Last Month comparison anchored to `TODAY()` to handle the fact that `dim_date` contains future dates.
+
+<img width="1436" height="808" alt="image" src="https://github.com/user-attachments/assets/bbcddd81-0439-4825-ad95-651624699ee0" />
+
+### Time Patterns — "When You Spend"
+
+Spending behavior over time: Top Spending Day, Weekend Spending %, a Spending by Day of Week chart, and a Weekly Spending Trend line chart across the weeks of the month.
+
+<img width="1432" height="807" alt="image" src="https://github.com/user-attachments/assets/2a6610f1-b767-41af-9fd7-91c125949dc2" />
+
+
+### Income — "Money In"
+
+Focused exclusively on income: Total Income, Top Income Source, Top Income Source Share, an Income by Source chart, and a Monthly Income chart.
+
+<img width="1433" height="805" alt="image" src="https://github.com/user-attachments/assets/fa10afd9-e1cb-44f7-b70a-9e0779192d2d" />
+
+
+> **Note:** add the four screenshot files to a `screenshots/` folder next to this README in the repo (or update the paths above) for the images to render on GitHub.
 
 ---
 
@@ -149,14 +178,14 @@ Working rule for the build: every numeric value in every visual comes from an ex
 | 1v2 — Adaptive onboarding | Done | Life-situation-based categories, settings page |
 | 2 — Cross-platform sync | Done | Achieved through shared cloud deployment |
 | 3 — Data warehouse | Done | Constellation schema, dbt pipeline, and nightly Airflow orchestration |
-| 4 — BI dashboards | In progress | Power BI connected to the warehouse, dashboard build underway |
+| 4 — BI dashboards | Done | 4-page Power BI dashboard connected to the warehouse |
 | 5 — Real-time pipeline | Planned | Kafka streaming into the warehouse |
 | 6 — Machine learning | Planned | Forecasting, anomaly detection, spending clusters |
 | Optional — Databricks | Planned | Enterprise-scale data lake and processing |
 
 ---
 
-## Screenshots
+## Screenshots (application)
 
 <img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
 <img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
