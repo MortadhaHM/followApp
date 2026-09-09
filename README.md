@@ -1,4 +1,4 @@
-# Personal Finance Management System
+# MorTrack
 
 A full-stack personal finance platform, built to solve a real problem and grown, phase by phase, into a data engineering and business intelligence portfolio project.
 
@@ -16,6 +16,11 @@ I'm an ERP/BI engineering student in Tunisia. The plan for this project has alwa
 It is not a tutorial project and not built on a synthetic dataset. Every transaction in it is real.
 
 **Status:** actively being built. Phases 1, 1v2, 2, 3 (data warehouse with orchestration), and 4 (Power BI dashboards) are complete. Phase 5 (real-time pipeline) is next.
+
+### Name and Logo
+
+The app is named **MorTrack** — a combination of my name, Mortadha, and "track," reflecting what the app actually does. The logo is a bat emblem, a personal touch inspired by Batman, redesigned with a bar chart and an upward trendline built into the wings, tying the visual identity back to the app's purpose: tracking and growing financial awareness.
+<img width="904" height="631" alt="logo_transparent" src="https://github.com/user-attachments/assets/b5db61cb-b670-44b8-8a29-99fc41fdd779" />
 
 ---
 
@@ -105,6 +110,8 @@ followApp/
 └── powerbi/             # Power BI dashboard (.pbix) and exported assets
 ```
 
+> Note: the repository and live app URL still reference the original project name, `followApp`. They remain unchanged for now to avoid breaking existing links; a rename is a possible future cleanup step.
+
 ---
 
 ## Data Warehouse — Constellation Schema (Phase 3, complete)
@@ -137,7 +144,7 @@ Power BI Desktop is connected directly to the `analytics` schema on Supabase via
 
 Working rule for the build: every numeric value in every visual comes from an explicit DAX measure in a dedicated `_Measures` table, never a raw column dragged directly into a visual, to avoid silent aggregation errors across unrelated tables.
 
-The dashboard is a 4-page financial story, each page answering one question, with a fixed Batman-themed black-and-gold design (dark backgrounds, gold/yellow accents, clickable logo as a Home button, Next/Previous navigation between pages).
+The dashboard is a 4-page financial story, each page answering one question, styled with the MorTrack black-and-gold visual identity (dark backgrounds, gold accents, the MorTrack logo doubling as a clickable Home button, Next/Previous navigation between pages).
 
 ### Overview — "How Am I Doing?"
 

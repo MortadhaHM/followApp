@@ -1,0 +1,22 @@
+{
+  "name": "FinanceFlow Dark Gold",
+  "dataColors": [
+    "#D4AF37",
+    "#F5D97A",
+    "#FFD700",
+    "#F5F1E6",
+    "#9A9A9A",
+    "#10B981",
+    "#EF4444",
+    "#6B7A99"
+  ],
+  "background": "#1C1C1C",
+  "foreground": "#F5F1E6",
+  "tableAccent": "#D4AF37",
+  "good": "#10B981",
+  "bad": "#EF4444",
+  "neutral": "#9A9A9A",
+  "maximum": "#FFD700",
+  "center": "#D4AF37",
+  "minimum": "#1C1C1C"
+}
