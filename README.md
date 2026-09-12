@@ -1,9 +1,15 @@
+﻿<div align="center">
+
 # MorTrack
 
-A full-stack personal finance platform, built to solve a real problem and grown, phase by phase, into a data engineering and business intelligence portfolio project.
+**A full-stack personal finance platform — built to solve a real problem, grown phase by phase into a data engineering and business intelligence portfolio project.**
 
-**Live app:** https://follow-app-rho.vercel.app
-**Repository:** https://github.com/MortadhaHM/followApp
+[![Live App](https://img.shields.io/badge/Live%20App-follow--app--rho.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://follow-app-rho.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-MortadhaHM%2FfollowApp-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MortadhaHM/followApp)
+
+<img width="400" alt="MorTrack Logo" src="https://github.com/user-attachments/assets/b5db61cb-b670-44b8-8a29-99fc41fdd779" />
+
+</div>
 
 ---
 
@@ -20,7 +26,6 @@ It is not a tutorial project and not built on a synthetic dataset. Every transac
 ### Name and Logo
 
 The app is named **MorTrack** — a combination of my name, Mortadha, and "track," reflecting what the app actually does. The logo is a bat emblem, a personal touch inspired by Batman, redesigned with a bar chart and an upward trendline built into the wings, tying the visual identity back to the app's purpose: tracking and growing financial awareness.
-<img width="904" height="631" alt="logo_transparent" src="https://github.com/user-attachments/assets/b5db61cb-b670-44b8-8a29-99fc41fdd779" />
 
 ---
 
@@ -40,18 +45,18 @@ The app is named **MorTrack** — a combination of my name, Mortadha, and "track
 ```
 React (Vite)  --->  FastAPI  --->  PostgreSQL / public schema (Supabase)
   [Vercel]           [Render]                |
-                                              |
-                                     dbt (finance_dbt/)
-                                     orchestrated nightly by
-                                     Apache Airflow (Docker Compose)
-                                              |
-                                              v
-                               PostgreSQL / analytics schema (Supabase)
-                               constellation schema — fact_transactions,
-                               fact_daily_balance, dim_date, dim_category
-                                              |
-                               Power BI Desktop  (4-page dashboard, complete)
-                               Recharts in-app   (Phase 4 — real users)
+                                             |
+                                    dbt (finance_dbt/)
+                                    orchestrated nightly by
+                                    Apache Airflow (Docker Compose)
+                                             |
+                                             v
+                              PostgreSQL / analytics schema (Supabase)
+                              constellation schema — fact_transactions,
+                              fact_daily_balance, dim_date, dim_category
+                                             |
+                              Power BI Desktop  (4-page dashboard, complete)
+                              Recharts in-app   (Phase 4 — real users)
 
 Planned next:
   -> Apache Kafka               (real-time updates, Phase 5)
@@ -62,6 +67,36 @@ Planned next:
 ---
 
 ## Tech Stack
+
+### Frontend & Backend
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
+### Database & Hosting
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
+
+### Data Engineering
+
+![dbt](https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white)
+![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=apache-airflow&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
+
+### Business Intelligence & ML
+
+![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
+![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+
+### Full Stack Summary
 
 | Layer | Tool | Status |
 |---|---|---|
@@ -80,7 +115,7 @@ Planned next:
 | ML | scikit-learn, MLflow | Phase 6 |
 | Large-scale platform (optional) | Databricks, Delta Lake, Spark | Under consideration |
 
-The database was originally on Render's free managed PostgreSQL, which expires after 90 days. It has since been migrated to Supabase for permanent free hosting — noted here because it's a real lesson, not a hypothetical one.
+> The database was originally on Render's free managed PostgreSQL, which expires after 90 days. It has since been migrated to Supabase for permanent free hosting — noted here because it's a real lesson, not a hypothetical one.
 
 ---
 
@@ -110,7 +145,7 @@ followApp/
 └── powerbi/             # Power BI dashboard (.pbix) and exported assets
 ```
 
-> Note: the repository and live app URL still reference the original project name, `followApp`. They remain unchanged for now to avoid breaking existing links; a rename is a possible future cleanup step.
+> **Note:** the repository and live app URL still reference the original project name, `followApp`. They remain unchanged for now to avoid breaking existing links; a rename is a possible future cleanup step.
 
 ---
 
@@ -150,30 +185,25 @@ The dashboard is a 4-page financial story, each page answering one question, sty
 
 Overall financial health at a glance: Avg Daily Spending, Total Expenses, Savings, Total Income, % Income Spent, an Income vs Expenses chart by month, and a Balance Over Time trend.
 
-<img width="1432" height="806" alt="image" src="https://github.com/user-attachments/assets/cc3aa2da-5242-4a01-915c-b09ab2599c31" />
-
+<img width="1432" height="806" alt="Overview Dashboard" src="https://github.com/user-attachments/assets/cc3aa2da-5242-4a01-915c-b09ab2599c31" />
 
 ### Categories — "Where Your Money Goes"
 
 Breaks down spending by category: Top Category, Top Category Share, Top Category Amount, a Top Spending Categories chart, a Most Frequent Purchases chart (by transaction count, not amount), and a This Month vs Last Month comparison anchored to `TODAY()` to handle the fact that `dim_date` contains future dates.
 
-<img width="1436" height="808" alt="image" src="https://github.com/user-attachments/assets/bbcddd81-0439-4825-ad95-651624699ee0" />
+<img width="1436" height="808" alt="Categories Dashboard" src="https://github.com/user-attachments/assets/bbcddd81-0439-4825-ad95-651624699ee0" />
 
 ### Time Patterns — "When You Spend"
 
 Spending behavior over time: Top Spending Day, Weekend Spending %, a Spending by Day of Week chart, and a Weekly Spending Trend line chart across the weeks of the month.
 
-<img width="1432" height="807" alt="image" src="https://github.com/user-attachments/assets/2a6610f1-b767-41af-9fd7-91c125949dc2" />
-
+<img width="1432" height="807" alt="Time Patterns Dashboard" src="https://github.com/user-attachments/assets/2a6610f1-b767-41af-9fd7-91c125949dc2" />
 
 ### Income — "Money In"
 
 Focused exclusively on income: Total Income, Top Income Source, Top Income Source Share, an Income by Source chart, and a Monthly Income chart.
 
-<img width="1433" height="805" alt="image" src="https://github.com/user-attachments/assets/fa10afd9-e1cb-44f7-b70a-9e0779192d2d" />
-
-
-> **Note:** add the four screenshot files to a `screenshots/` folder next to this README in the repo (or update the paths above) for the images to render on GitHub.
+<img width="1433" height="805" alt="Income Dashboard" src="https://github.com/user-attachments/assets/fa10afd9-e1cb-44f7-b70a-9e0779192d2d" />
 
 ---
 
@@ -192,14 +222,14 @@ Focused exclusively on income: Total Income, Top Income Source, Top Income Sourc
 
 ---
 
-## Screenshots (application)
+## Screenshots (Application)
 
-<img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
-<img width="1918" height="935" alt="image" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
-<img width="1901" height="936" alt="image" src="https://github.com/user-attachments/assets/5e155b6d-4262-4609-8e84-74817fe18314" />
-<img width="1901" height="935" alt="image" src="https://github.com/user-attachments/assets/546c5f71-039e-4464-acc8-26cbc4fcc4a6" />
-<img width="1901" height="936" alt="image" src="https://github.com/user-attachments/assets/7b31e77e-5993-44a9-98ac-854fac442a11" />
-<img width="1897" height="935" alt="image" src="https://github.com/user-attachments/assets/857bf82d-7f87-4b54-ad20-be92d1e9316c" />
+<img width="1918" height="935" alt="App Screenshot 1" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
+<img width="1918" height="935" alt="App Screenshot 2" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
+<img width="1901" height="936" alt="App Screenshot 3" src="https://github.com/user-attachments/assets/5e155b6d-4262-4609-8e84-74817fe18314" />
+<img width="1901" height="935" alt="App Screenshot 4" src="https://github.com/user-attachments/assets/546c5f71-039e-4464-acc8-26cbc4fcc4a6" />
+<img width="1901" height="936" alt="App Screenshot 5" src="https://github.com/user-attachments/assets/7b31e77e-5993-44a9-98ac-854fac442a11" />
+<img width="1897" height="935" alt="App Screenshot 6" src="https://github.com/user-attachments/assets/857bf82d-7f87-4b54-ad20-be92d1e9316c" />
 
 ---
 
@@ -211,4 +241,11 @@ Not yet decided. If you're viewing this and considering reuse, ask first.
 
 ## Author
 
-Mortadha HOUIMELI, ERP/BI Engineering Student, Tunisia
+<div align="center">
+
+**Mortadha HOUIMELI**  
+ERP/BI Engineering Student — Tunisia
+
+[![GitHub](https://img.shields.io/badge/GitHub-MortadhaHM-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MortadhaHM)
+
+</div>
