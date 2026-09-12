@@ -71,8 +71,11 @@ Planned next:
 ### Frontend & Backend
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 ### Database & Hosting
@@ -100,8 +103,10 @@ Planned next:
 
 | Layer | Tool | Status |
 |---|---|---|
-| Frontend | React (Vite) | In use |
-| Backend | FastAPI (Python) | In use |
+| Frontend (Core) | React (Vite) | In use |
+| Frontend (Analytics Standalone) | Angular 19 (Standalone) | In use |
+| Backend (API) | FastAPI (Python) | In use |
+| Backend (App Server) | Node.js (Express) | In use |
 | Database | PostgreSQL, hosted on Supabase | In use |
 | Frontend hosting | Vercel | In use |
 | Backend hosting | Render | In use |
@@ -110,7 +115,7 @@ Planned next:
 | Data integration | Airbyte | Pending — enters when external sources are added |
 | Orchestration | Apache Airflow (Docker Compose) | Phase 3 complete — nightly DAG running |
 | BI (portfolio) | Power BI Desktop | Phase 4 complete — 4-page dashboard |
-| BI (in-app) | Recharts | Phase 4 |
+| BI (in-app embed) | Power BI Embedded (`/analytics`) | Complete — native dark gold framing |
 | Streaming | Apache Kafka | Phase 5 |
 | ML | scikit-learn, MLflow | Phase 6 |
 | Large-scale platform (optional) | Databricks, Delta Lake, Spark | Under consideration |
@@ -224,10 +229,14 @@ The Angular standalone component (`app/src/app/pages/analytics/analytics.compone
 
 2. **16:9 Canvas Aspect-Ratio Container:**
    - The report canvas naturally has a 16:9 aspect ratio.
-   - By sizing the canvas frame with `aspect-ratio: 16 / 9`, `max-width: calc((100vh - 58px) * 16 / 9)`, and `max-height: calc(100vw * 9 / 16)`, the Power BI report fills the frame edge-to-edge.
+   - By sizing the canvas frame with `aspect-ratio: 16 / 9`, `max-width: calc((100vh - 82px) * 16 / 9)`, and `max-height: calc((100vw - 32px) * 9 / 16)`, the Power BI report fills the frame edge-to-edge.
    - The surrounding container is set to MorTrack's dark background (`var(--bg): #050505`), eliminating the bright white margin bars on the left and right.
 
-3. **Power BI JavaScript SDK (`powerbi-client`) Integration:**
+3. **Subtle Yellow/Gold Framing:**
+   - The embedded report container is framed with a subtle 1px border (`border: 1px solid var(--navbar-border)`) using the exact same yellow/gold token (`rgba(212, 175, 55, 0.15)`) as the horizontal separator below MorTrack's navbar.
+   - Slightly rounded corners (`border-radius: 8px`) and soft ambient shadows (`box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5)`) give it a sleek, integrated look without modifying any internal report visuals.
+
+4. **Power BI JavaScript SDK (`powerbi-client`) Integration:**
    - The project incorporates Microsoft's official `powerbi-client` library.
    - `AnalyticsComponent` initializes `@ViewChild('reportContainer')` and configures `service.Service` with `models.BackgroundType.Transparent`, `models.DisplayOption.FitToWidth`, and hidden panes.
    - **Technical Note on SDK Authentication:** In `powerbi-client` (Embed.ts line 7775), Microsoft explicitly throws `EmbedUrlNotSupported` if `autoAuth=true` is used with `powerbi.embed()`. This is because the JavaScript client API is designed exclusively for Azure AD Bearer tokens or backend Embed tokens. MorTrack automatically handles this by utilizing the clean session URL for immediate demo use and providing the complete SDK pipeline when an Azure AD token is supplied.
@@ -323,12 +332,36 @@ Once running, access the application in your browser (preferably Microsoft Edge)
 
 ## Screenshots (Application)
 
+### Core Web Application (Transactions, Onboarding, Settings)
+
 <img width="1918" height="935" alt="App Screenshot 1" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
 <img width="1918" height="935" alt="App Screenshot 2" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
 <img width="1901" height="936" alt="App Screenshot 3" src="https://github.com/user-attachments/assets/5e155b6d-4262-4609-8e84-74817fe18314" />
 <img width="1901" height="935" alt="App Screenshot 4" src="https://github.com/user-attachments/assets/546c5f71-039e-4464-acc8-26cbc4fcc4a6" />
 <img width="1901" height="936" alt="App Screenshot 5" src="https://github.com/user-attachments/assets/7b31e77e-5993-44a9-98ac-854fac442a11" />
 <img width="1897" height="935" alt="App Screenshot 6" src="https://github.com/user-attachments/assets/857bf82d-7f87-4b54-ad20-be92d1e9316c" />
+
+---
+
+### In-App Power BI Dashboards (`/analytics`)
+
+> The 4-page Power BI analytical report embedded natively into the MorTrack web application, featuring the dark gold theme framing and zero external Power BI chrome.
+
+#### 1. Overview — "How Am I Doing?" (In-App)
+<!-- TODO: Add your in-app Overview screenshot below -->
+<!-- <img width="1920" alt="MorTrack In-App Analytics - Overview" src="PASTE_OVERVIEW_SCREENSHOT_URL_HERE" /> -->
+
+#### 2. Categories — "Where Your Money Goes" (In-App)
+<!-- TODO: Add your in-app Categories screenshot below -->
+<!-- <img width="1920" alt="MorTrack In-App Analytics - Categories" src="PASTE_CATEGORIES_SCREENSHOT_URL_HERE" /> -->
+
+#### 3. Time Patterns — "When You Spend" (In-App)
+<!-- TODO: Add your in-app Time Patterns screenshot below -->
+<!-- <img width="1920" alt="MorTrack In-App Analytics - Time Patterns" src="PASTE_TIME_PATTERNS_SCREENSHOT_URL_HERE" /> -->
+
+#### 4. Income — "Money In" (In-App)
+<!-- TODO: Add your in-app Income screenshot below -->
+<!-- <img width="1920" alt="MorTrack In-App Analytics - Income" src="PASTE_INCOME_SCREENSHOT_URL_HERE" /> -->
 
 ---
 
