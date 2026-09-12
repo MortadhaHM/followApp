@@ -1,5 +1,7 @@
 # dependencies / build output
 **/node_modules/
+app/dist/
+.angular/
 
 # env files (keep examples)
 **/.env
@@ -15,9 +17,11 @@ finance_dbt/logs/
 logs/
 
 # misc files that don't belong in the repo
-*.html
+/*.html
 *.webp
 *.docx
+!app/src/**/*.html
+!finance-app/frontend/**/*.html
 
 airflow/.env
 airflow/logs/

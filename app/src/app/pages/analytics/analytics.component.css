@@ -1,0 +1,55 @@
+:host {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 58px);
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.analytics-wrapper {
+  width: 100%;
+  height: calc(100vh - 58px);
+  background-color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/*
+ * Main Power BI Dashboard Container
+ * Wrapped with a subtle 1px yellow/gold border matching the navbar separator,
+ * with slight rounded corners and overflow hidden.
+ */
+.report-container {
+  width: 100%;
+  height: 100%;
+  max-width: calc((100vh - 82px) * 16 / 9);
+  max-height: calc((100vw - 32px) * 9 / 16);
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg);
+  border: 1px solid var(--navbar-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.05);
+  box-sizing: border-box;
+}
+
+.powerbi-canvas-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background-color: var(--bg);
+}
+
+/* Ensure powerbi-client SDK iframe inside the container has no internal border */
+.report-container iframe {
+  border: none !important;
+}

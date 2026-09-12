@@ -17,6 +17,7 @@ import Register from "./pages/Register.jsx";
 import Onboarding1 from "./pages/Onboarding1.jsx";
 import Onboarding2 from "./pages/Onboarding2.jsx";
 import Settings from "./pages/Settings.jsx";
+import Analytics from "./pages/Analytics.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { CategoriesProvider } from "./context/CategoriesContext.jsx";
 
@@ -51,6 +52,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <Analytics />
               </ProtectedRoute>
             }
           />

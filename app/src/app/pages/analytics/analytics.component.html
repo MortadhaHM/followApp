@@ -1,0 +1,12 @@
+<div class="analytics-wrapper">
+  <!-- Power BI Report Container -->
+  <div #reportContainer class="report-container">
+    <iframe
+      *ngIf="embedMode === 'session'"
+      [src]="safeCleanEmbedUrl"
+      title="MorTrack Power BI Analytics"
+      class="powerbi-canvas-frame"
+      allowFullScreen="true"
+    ></iframe>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<header class="navbar" role="banner">
+  <div class="navbar__inner">
+    <div class="navbar__left">
+      <a routerLink="/transactions" class="navbar__brand" aria-label="MorTrack home">
+        <img
+          src="assets/logo_transparent.png"
+          alt="MorTrack Logo"
+          class="navbar__brand-img"
+        />
+        <span>{{ brandName }}</span>
+      </a>
+
+      <!-- Primary Navigation: Transactions & Analytics -->
+      <nav class="navbar__nav" aria-label="Main Navigation">
+        <a
+          routerLink="/transactions"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="nav-link"
+          id="nav-transactions"
+        >
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12V8H4a2 2 0 0 1 0-4h16v4"/>
+            <path d="M4 6v14a2 2 0 0 0 2 2h14v-4"/>
+            <circle cx="18" cy="14" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          Transactions
+        </a>
+
+        <a
+          routerLink="/analytics"
+          routerLinkActive="active"
+          class="nav-link"
+          id="nav-analytics"
+        >
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Analytics
+        </a>
+      </nav>
+    </div>
+
+    <!-- Secondary actions -->
+    <div class="navbar__actions">
+      <button class="btn btn--secondary navbar-btn" aria-label="Settings" type="button">
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </button>
+
+      <button class="btn btn--secondary" type="button" id="logout-btn">
+        Sign out
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # MorTrack
 
@@ -204,6 +204,105 @@ Spending behavior over time: Top Spending Day, Weekend Spending %, a Spending by
 Focused exclusively on income: Total Income, Top Income Source, Top Income Source Share, an Income by Source chart, and a Monthly Income chart.
 
 <img width="1433" height="805" alt="Income Dashboard" src="https://github.com/user-attachments/assets/fa10afd9-e1cb-44f7-b70a-9e0779192d2d" />
+
+---
+
+## Power BI Embedded Analytics (Dedicated `/analytics` Page)
+
+MorTrack integrates a dedicated Analytics page (`/analytics`) displaying the completed 4-page Power BI report directly inside the web interface without any extraneous Power BI chrome (no filters pane, no page navigation tabs, and no white letterboxing).
+
+### Clean Embed Architecture
+The Angular standalone component (`app/src/app/pages/analytics/analytics.component.ts`) and React component (`finance-app/frontend/src/pages/Analytics.jsx`) are configured to render the dashboard natively within MorTrack:
+
+1. **Explicit Microsoft URL Parameters for Zero Chrome:**
+   ```
+   https://app.powerbi.com/reportEmbed?reportId=553d2c00-97f0-4483-9fef-05deb79dce25&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&filterPaneEnabled=false&navContentPaneEnabled=false
+   ```
+   - `filterPaneEnabled=false`: Completely hides the collapsible Power BI filter pane on the right.
+   - `navContentPaneEnabled=false`: Completely hides the bottom Power BI page navigation tabs.
+   - `autoAuth=true`: Uses the active browser session at `app.powerbi.com` without exposing credentials.
+
+2. **16:9 Canvas Aspect-Ratio Container:**
+   - The report canvas naturally has a 16:9 aspect ratio.
+   - By sizing the canvas frame with `aspect-ratio: 16 / 9`, `max-width: calc((100vh - 58px) * 16 / 9)`, and `max-height: calc(100vw * 9 / 16)`, the Power BI report fills the frame edge-to-edge.
+   - The surrounding container is set to MorTrack's dark background (`var(--bg): #050505`), eliminating the bright white margin bars on the left and right.
+
+3. **Power BI JavaScript SDK (`powerbi-client`) Integration:**
+   - The project incorporates Microsoft's official `powerbi-client` library.
+   - `AnalyticsComponent` initializes `@ViewChild('reportContainer')` and configures `service.Service` with `models.BackgroundType.Transparent`, `models.DisplayOption.FitToWidth`, and hidden panes.
+   - **Technical Note on SDK Authentication:** In `powerbi-client` (Embed.ts line 7775), Microsoft explicitly throws `EmbedUrlNotSupported` if `autoAuth=true` is used with `powerbi.embed()`. This is because the JavaScript client API is designed exclusively for Azure AD Bearer tokens or backend Embed tokens. MorTrack automatically handles this by utilizing the clean session URL for immediate demo use and providing the complete SDK pipeline when an Azure AD token is supplied.
+
+### Power BI Login Requirement
+The user must have access to the report workspace and be signed into [Power BI Service](https://app.powerbi.com) in the same browser session. When navigating to `/analytics`:
+- If already logged in, Power BI automatically authorizes and renders the report seamlessly.
+- If prompted to sign in within the iframe, the user must authenticate with their authorized Power BI account.
+
+### Browser Recommendation
+**Microsoft Edge** is strongly recommended for this demo. Iframe authentication and cross-domain cookie behavior can vary across browsers; Edge provides seamless single-sign-on (SSO) and avoids third-party cookie restrictions that may block the Power BI session from loading.
+
+### Demo Limitation & Production Path
+> [!IMPORTANT]
+> **This is a demo embedding approach.**
+> - The MorTrack application login does **NOT** automatically determine or map to the Power BI identity.
+> - Report access and permissions are entirely governed by the user's active Power BI Service session.
+> - This demo implementation does **NOT** provide production-grade per-user Power BI data isolation.
+> - Full production deployment will implement Power BI Embedded "App owns data" with an Azure App Registration, a Node backend REST API endpoint generating embed tokens, and dynamic Row-Level Security (RLS) bound to MorTrack's `user_id`.
+
+## Running the Angular & Node.js Production Build
+
+### Project Structure
+```
+MorTrack/
+├── app/                  # Angular 19 Standalone application
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/navbar/  # MorTrack header & navigation
+│   │   │   ├── pages/analytics/    # Power BI iframe component
+│   │   │   └── pages/transactions/ # Transactions component
+│   │   └── styles.css              # MorTrack dark theme design tokens
+│   ├── angular.json
+│   └── package.json
+├── server/               # Minimal Node.js Express server
+│   ├── server.js         # Static file serving & SPA fallback
+│   └── package.json
+└── README.md
+```
+
+### 1. Installation
+Install dependencies for both the Angular application and the Express server:
+
+```bash
+# Install Angular dependencies
+cd app
+npm install
+
+# Install Express server dependencies
+cd ../server
+npm install
+```
+
+### 2. Angular Production Build
+Build the Angular application for production:
+
+```bash
+cd app
+npm run build
+```
+
+This compiles the standalone Angular app to `app/dist/app/browser`.
+
+### 3. Start Node.js Express Server
+Start the production server:
+
+```bash
+cd server
+node server.js
+```
+*(Or `npm start` from within the `server/` directory)*
+
+Once running, access the application in your browser (preferably Microsoft Edge):
+- **Home / Transactions:** `http://localhost:3000/transactions`
+- **Dedicated Power BI Analytics:** `http://localhost:3000/analytics`
 
 ---
 
