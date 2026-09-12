@@ -190,25 +190,25 @@ The dashboard is a 4-page financial story, each page answering one question, sty
 
 Overall financial health at a glance: Avg Daily Spending, Total Expenses, Savings, Total Income, % Income Spent, an Income vs Expenses chart by month, and a Balance Over Time trend.
 
-<img width="1432" height="806" alt="Overview Dashboard" src="https://github.com/user-attachments/assets/cc3aa2da-5242-4a01-915c-b09ab2599c31" />
+<img width="1432" height="802" alt="image" src="https://github.com/user-attachments/assets/51ceb922-70d6-433e-98f6-660f7541ccb9" />
 
 ### Categories — "Where Your Money Goes"
 
 Breaks down spending by category: Top Category, Top Category Share, Top Category Amount, a Top Spending Categories chart, a Most Frequent Purchases chart (by transaction count, not amount), and a This Month vs Last Month comparison anchored to `TODAY()` to handle the fact that `dim_date` contains future dates.
 
-<img width="1436" height="808" alt="Categories Dashboard" src="https://github.com/user-attachments/assets/bbcddd81-0439-4825-ad95-651624699ee0" />
+<img width="1435" height="802" alt="image" src="https://github.com/user-attachments/assets/6f19e3b0-b3c3-4fd3-800d-12518cf5a5e7" />
 
 ### Time Patterns — "When You Spend"
 
 Spending behavior over time: Top Spending Day, Weekend Spending %, a Spending by Day of Week chart, and a Weekly Spending Trend line chart across the weeks of the month.
 
-<img width="1432" height="807" alt="Time Patterns Dashboard" src="https://github.com/user-attachments/assets/2a6610f1-b767-41af-9fd7-91c125949dc2" />
+<img width="1431" height="802" alt="image" src="https://github.com/user-attachments/assets/1b0fa01f-1b2f-4b27-8603-b8554307c450" />
 
 ### Income — "Money In"
 
 Focused exclusively on income: Total Income, Top Income Source, Top Income Source Share, an Income by Source chart, and a Monthly Income chart.
 
-<img width="1433" height="805" alt="Income Dashboard" src="https://github.com/user-attachments/assets/fa10afd9-e1cb-44f7-b70a-9e0779192d2d" />
+<img width="1431" height="805" alt="image" src="https://github.com/user-attachments/assets/a4681114-7907-4372-aae5-c1590ed21c47" />
 
 ---
 
@@ -333,13 +333,13 @@ Once running, access the application in your browser (preferably Microsoft Edge)
 ## Screenshots (Application)
 
 ### Core Web Application (Transactions, Onboarding, Settings)
+<img width="1917" height="927" alt="image" src="https://github.com/user-attachments/assets/033be41e-1b81-4e4c-8721-c396d2e21d81" />
+<img width="1915" height="932" alt="image" src="https://github.com/user-attachments/assets/9103ac89-3122-49a7-96c6-9ee7a3db41b2" />
+<img width="1892" height="925" alt="image" src="https://github.com/user-attachments/assets/e5aa04e4-e63a-453c-878e-65fb9eb6ff94" />
+<img width="1897" height="931" alt="image" src="https://github.com/user-attachments/assets/b4ab309c-d110-4197-ba1a-3731615a781f" />
+<img width="1887" height="920" alt="image" src="https://github.com/user-attachments/assets/124799c6-4280-4e42-954a-4ae4963adeda" />
 
-<img width="1918" height="935" alt="App Screenshot 1" src="https://github.com/user-attachments/assets/367a6622-cb36-44bf-8677-8eef2a78de0f" />
-<img width="1918" height="935" alt="App Screenshot 2" src="https://github.com/user-attachments/assets/fc8e22e8-35e2-42a1-a30b-7425f25c21ce" />
-<img width="1901" height="936" alt="App Screenshot 3" src="https://github.com/user-attachments/assets/5e155b6d-4262-4609-8e84-74817fe18314" />
-<img width="1901" height="935" alt="App Screenshot 4" src="https://github.com/user-attachments/assets/546c5f71-039e-4464-acc8-26cbc4fcc4a6" />
-<img width="1901" height="936" alt="App Screenshot 5" src="https://github.com/user-attachments/assets/7b31e77e-5993-44a9-98ac-854fac442a11" />
-<img width="1897" height="935" alt="App Screenshot 6" src="https://github.com/user-attachments/assets/857bf82d-7f87-4b54-ad20-be92d1e9316c" />
+
 
 ---
 
@@ -349,19 +349,19 @@ Once running, access the application in your browser (preferably Microsoft Edge)
 
 #### 1. Overview — "How Am I Doing?" (In-App)
 <!-- TODO: Add your in-app Overview screenshot below -->
-<!-- <img width="1920" alt="MorTrack In-App Analytics - Overview" src="PASTE_OVERVIEW_SCREENSHOT_URL_HERE" /> -->
+<img width="1896" height="930" alt="image" src="https://github.com/user-attachments/assets/b9b13567-f205-455d-a940-284a9a604c0f" />
 
 #### 2. Categories — "Where Your Money Goes" (In-App)
 <!-- TODO: Add your in-app Categories screenshot below -->
-<!-- <img width="1920" alt="MorTrack In-App Analytics - Categories" src="PASTE_CATEGORIES_SCREENSHOT_URL_HERE" /> -->
+<img width="1891" height="923" alt="image" src="https://github.com/user-attachments/assets/1656135e-1526-4f21-abef-8fb8b9ea7979" />
 
 #### 3. Time Patterns — "When You Spend" (In-App)
 <!-- TODO: Add your in-app Time Patterns screenshot below -->
-<!-- <img width="1920" alt="MorTrack In-App Analytics - Time Patterns" src="PASTE_TIME_PATTERNS_SCREENSHOT_URL_HERE" /> -->
+<img width="1890" height="922" alt="image" src="https://github.com/user-attachments/assets/ba7a25e4-ce6a-4b4e-b357-18b490ef4515" />
 
 #### 4. Income — "Money In" (In-App)
 <!-- TODO: Add your in-app Income screenshot below -->
-<!-- <img width="1920" alt="MorTrack In-App Analytics - Income" src="PASTE_INCOME_SCREENSHOT_URL_HERE" /> -->
+<img width="1890" height="927" alt="image" src="https://github.com/user-attachments/assets/308df0fe-7da5-4b09-88e4-fe31e0d7fee4" />
 
 ---
 
