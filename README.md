@@ -4,7 +4,7 @@
 
 **A full-stack personal finance platform — built to solve a real problem, grown phase by phase into a data engineering and business intelligence portfolio project.**
 
-[![Live App](https://img.shields.io/badge/Live%20App-follow--app--rho.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://follow-app-rho.vercel.app)
+[![Live App](https://img.shields.io/badge/Live%20App-mortrack.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://mortrack.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-MortadhaHM%2FfollowApp-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MortadhaHM/followApp)
 
 <img width="400" alt="MorTrack Logo" src="https://github.com/user-attachments/assets/b5db61cb-b670-44b8-8a29-99fc41fdd779" />
@@ -150,7 +150,7 @@ followApp/
 └── powerbi/             # Power BI dashboard (.pbix) and exported assets
 ```
 
-> **Note:** the repository and live app URL still reference the original project name, `followApp`. They remain unchanged for now to avoid breaking existing links; a rename is a possible future cleanup step.
+> **Note:** the repository name still references the original project name, `followApp`, while the live application is deployed at `mortrack.vercel.app`.
 
 ---
 
