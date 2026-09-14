@@ -55,6 +55,8 @@ app.add_middleware(
     # Production: only allow the deployed Vercel frontend
     allow_origins=[
         "https://follow-app-rho.vercel.app",
+        "https://mortrack.vercel.app",
+        "https://mortrack-app.vercel.app",
         "http://localhost:5173",
         "http://localhost:3000",
     ],
